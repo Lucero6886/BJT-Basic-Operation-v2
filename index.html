@@ -1,574 +1,404 @@
-import React, { useState } from 'react';
-import { 
-  BookOpen, 
-  Cpu, 
-  Activity, 
-  Lightbulb, 
-  Info, 
-  GraduationCap, 
-  Copyright, 
-  Zap, 
-  ChevronRight, 
-  Layers,
-  Settings,
-  Waves
-} from 'lucide-react';
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bài giảng BJT - Trường kỹ thuật Phenikaa</title>
+    <!-- Tích hợp Tailwind CSS cho giao diện hiện đại -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Tích hợp React và ReactDOM -->
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <!-- Tích hợp Babel để biên dịch mã JSX -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- Tích hợp Lucide Icons cho các biểu tượng kỹ thuật -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap');
+        
+        body { font-family: 'Inter', sans-serif; }
 
-// Component mô phỏng dòng hạt dẫn (Electron Flow)
-const ElectronFlow = ({ density, speed }) => {
-  if (density <= 0) return null;
-  const particleCount = Math.floor(density * 12);
-  return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none">
-      {[...Array(particleCount)].map((_, i) => (
-        <div
-          key={i}
-          className="absolute bg-yellow-300 rounded-full blur-[1px] shadow-[0_0_5px_#fef08a]"
-          style={{
-            width: '4px',
-            height: '4px',
-            left: `${Math.random() * 100}%`,
-            bottom: '-10px',
-            animation: `flowUp ${2 / speed}s linear infinite`,
-            animationDelay: `${Math.random() * 2}s`
-          }}
-        />
-      ))}
-    </div>
-  );
-};
-
-const App = () => {
-  const [activeTab, setActiveTab] = useState('overview');
-  const [bjtType, setBjtType] = useState('NPN');
-  const [vbe, setVbe] = useState(0.0);
-  const [isLedOn, setIsLedOn] = useState(false);
-  const [inputSignal, setInputSignal] = useState(1);
-
-  const tabs = [
-    { id: 'overview', label: 'Tổng quan', icon: <BookOpen className="w-5 h-5" /> },
-    { id: 'structure', label: 'Cấu tạo & Ký hiệu', icon: <Cpu className="w-5 h-5" /> },
-    { id: 'operation', label: 'Nguyên lý hoạt động', icon: <Activity className="w-5 h-5" /> },
-    { id: 'application', label: 'Ứng dụng thực tế', icon: <Lightbulb className="w-5 h-5" /> },
-  ];
-
-  // Hàm phụ trợ để hiển thị màu sắc theo loại BJT
-  const getBjtColors = () => {
-    return bjtType === 'NPN' 
-      ? { main: 'bg-blue-600', sub: 'bg-red-600', text: 'text-blue-600', border: 'border-blue-600' }
-      : { main: 'bg-red-600', sub: 'bg-blue-600', text: 'text-red-600', border: 'border-red-600' };
-  };
-
-  const colors = getBjtColors();
-
-  return (
-    <div className="min-h-screen bg-slate-50 flex flex-col font-sans text-slate-800 selection:bg-blue-100 selection:text-blue-900">
-      {/* Header Chuyên nghiệp */}
-      <header className="bg-white border-b sticky top-0 z-30 shadow-sm backdrop-blur-md bg-white/90">
-        <div className="max-w-6xl mx-auto px-4 py-3 flex flex-col md:flex-row justify-between items-center gap-4">
-          <div className="flex items-center gap-4">
-            <img 
-              src="Logo_Trường kỹ thuật.png" 
-              alt="Logo Phenikaa" 
-              className="h-14 md:h-16 object-contain hover:scale-105 transition-transform"
-              onError={(e) => { e.target.src = 'https://via.placeholder.com/200x80?text=Phenikaa+Engineering'; }}
-            />
-            <div className="h-10 w-px bg-slate-200 hidden md:block"></div>
-            <div className="text-center md:text-left">
-              <h1 className="text-base md:text-lg font-black text-[#002d72] uppercase leading-tight tracking-tight">Trường kỹ thuật Phenikaa</h1>
-              <p className="text-xs md:text-sm font-bold text-blue-700 uppercase tracking-widest">Đại học Phenikaa</p>
-            </div>
-          </div>
-          <div className="flex flex-col items-center md:items-end border-t md:border-t-0 pt-2 md:pt-0 w-full md:w-auto">
-            <span className="text-[10px] text-slate-400 uppercase font-black tracking-[0.2em] mb-1">Giảng viên biên soạn</span>
-            <p className="text-base font-black text-slate-900">Ths. Đinh Văn Nam</p>
-          </div>
-        </div>
-      </header>
-
-      {/* Hero Section */}
-      <div className="bg-[#002d72] text-white py-10 px-4 text-center relative overflow-hidden">
-        <div className="absolute inset-0 opacity-10 pointer-events-none">
-          <svg width="100%" height="100%"><pattern id="grid-hero" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M 40 0 L 0 0 0 40" fill="none" stroke="white" strokeWidth="0.5"/></pattern><rect width="100%" height="100%" fill="url(#grid-hero)" /></svg>
-        </div>
-        <div className="relative z-10">
-          <h2 className="text-3xl md:text-5xl font-black mb-3 uppercase tracking-tighter">Tranzito Lưỡng cực (BJT)</h2>
-          <p className="text-blue-100 max-w-2xl mx-auto italic text-sm md:text-base font-medium opacity-80">Kiến thức cơ bản về linh kiện khuếch đại và chuyển mạch trong kỹ thuật điện tử</p>
-        </div>
-      </div>
-
-      <main className="flex-grow flex flex-col">
-        {/* Navigation Tabs */}
-        <nav className="bg-white border-b shadow-md sticky top-[80px] md:top-[88px] z-20">
-          <div className="max-w-6xl mx-auto flex overflow-x-auto no-scrollbar scroll-smooth">
-            {tabs.map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center gap-2 px-6 py-5 transition-all whitespace-nowrap relative font-black text-xs uppercase tracking-widest ${
-                  activeTab === tab.id 
-                  ? 'text-blue-700' 
-                  : 'text-slate-400 hover:text-slate-600 hover:bg-slate-50'
-                }`}
-              >
-                {tab.icon}
-                {tab.label}
-                {activeTab === tab.id && (
-                  <div className="absolute bottom-0 left-0 w-full h-1 bg-blue-700 animate-in fade-in slide-in-from-bottom-1" />
-                )}
-              </button>
-            ))}
-          </div>
-        </nav>
-
-        {/* Content Body */}
-        <div className="max-w-6xl mx-auto w-full p-4 md:p-8 flex-grow">
-          <div className="bg-white rounded-[2.5rem] shadow-2xl border border-slate-100 overflow-hidden min-h-[600px] flex flex-col">
-            
-            {/* TAB: OVERVIEW */}
-            {activeTab === 'overview' && (
-              <div className="p-8 md:p-12 animate-fadeIn space-y-10 flex-grow">
-                <div className="flex items-center gap-4">
-                  <div className="w-14 h-14 bg-blue-600 rounded-[1.2rem] flex items-center justify-center text-white shadow-xl shadow-blue-100 rotate-3">
-                    <Info size={32} />
-                  </div>
-                  <div>
-                    <h2 className="text-3xl font-black text-slate-900 uppercase tracking-tight">1. Giới thiệu tổng quan</h2>
-                    <p className="text-slate-400 font-bold text-xs uppercase tracking-widest">Định nghĩa & Chức năng</p>
-                  </div>
-                </div>
-                
-                <div className="prose prose-slate max-w-none">
-                  <p className="text-xl text-slate-600 leading-relaxed font-medium">
-                    {'Bipolar Junction Transistor (BJT) là một linh kiện bán dẫn có 3 cực, có khả năng điều khiển dòng điện chạy qua hai cực đầu ra bằng một dòng điện nhỏ hơn tại cực đầu vào. Nó được gọi là "lưỡng cực" vì có sự tham gia của cả electron và lỗ trống trong quá trình dẫn điện.'}
-                  </p>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                  {[
-                    { title: "Khuếch đại", desc: "Tăng biên độ tín hiệu yếu (âm thanh, sóng vô tuyến) thành tín hiệu mạnh hơn.", icon: <Waves className="text-blue-600" /> },
-                    { title: "Chuyển mạch", desc: "Hoạt động như một công tắc điện tử tốc độ cao trong các hệ thống số và vi xử lý.", icon: <Zap className="text-yellow-500" /> },
-                    { title: "Điều khiển", desc: "Điều chỉnh công suất tải dựa trên tín hiệu điều khiển dòng điện cực Base.", icon: <Settings className="text-indigo-600" /> }
-                  ].map((card, i) => (
-                    <div key={i} className="p-8 rounded-[2rem] bg-slate-50 border border-slate-100 hover:shadow-2xl hover:-translate-y-2 transition-all group">
-                      <div className="mb-4 p-3 bg-white w-fit rounded-xl shadow-sm group-hover:scale-110 transition-transform">{card.icon}</div>
-                      <h4 className="text-slate-900 font-black mb-3 text-lg uppercase tracking-tight">{card.title}</h4>
-                      <p className="text-sm text-slate-500 leading-relaxed font-medium">{card.desc}</p>
-                    </div>
-                  ))}
-                </div>
-                
-                <div className="bg-[#002d72] text-white p-10 rounded-[3rem] shadow-2xl relative overflow-hidden">
-                  <div className="absolute -bottom-20 -right-20 w-80 h-80 bg-blue-400/10 rounded-full blur-3xl"></div>
-                  <h4 className="text-2xl font-black mb-6 flex items-center gap-3 italic underline decoration-blue-400 underline-offset-8">
-                    Chế độ làm việc chính
-                  </h4>
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-                    <div className="space-y-2">
-                      <div className="text-red-400 font-black text-xs uppercase tracking-widest flex items-center gap-2"><div className="w-2 h-2 bg-red-400 rounded-full"></div> Ngắt (Cut-off)</div>
-                      <p className="text-sm text-blue-100/70 italic">{'Tiếp giáp B-E không phân cực thuận. Transistor khóa hoàn toàn.'}</p>
-                    </div>
-                    <div className="space-y-2 border-x border-white/10 px-6">
-                      <div className="text-green-400 font-black text-xs uppercase tracking-widest flex items-center gap-2"><div className="w-2 h-2 bg-green-400 rounded-full"></div> Tuyến tính (Active)</div>
-                      <p className="text-sm text-blue-100/70 italic">{'Dòng $I_C$ tỉ lệ với $I_B$. Dùng để khuếch đại tín hiệu.'}</p>
-                    </div>
-                    <div className="space-y-2">
-                      <div className="text-blue-300 font-black text-xs uppercase tracking-widest flex items-center gap-2"><div className="w-2 h-2 bg-blue-300 rounded-full"></div> Bão hòa (Saturation)</div>
-                      <p className="text-sm text-blue-100/70 italic">{'Dẫn điện tối đa. Transistor đóng như một dây dẫn.'}</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* TAB: STRUCTURE (Cập nhật Ký hiệu chuẩn) */}
-            {activeTab === 'structure' && (
-              <div className="p-8 md:p-12 animate-fadeIn space-y-12">
-                <div className="flex items-center gap-4">
-                  <div className="w-14 h-14 bg-indigo-600 rounded-[1.2rem] flex items-center justify-center text-white shadow-xl shadow-indigo-100 -rotate-3">
-                    <Cpu size={32} />
-                  </div>
-                  <div>
-                    <h2 className="text-3xl font-black text-slate-900 uppercase tracking-tight">2. Cấu tạo & Ký hiệu</h2>
-                    <p className="text-slate-400 font-bold text-xs uppercase tracking-widest">Kiến trúc lớp & Quy ước quốc tế</p>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-                  {/* Visual Physical Model */}
-                  <div className="space-y-6">
-                    <div className="bg-slate-50 p-10 rounded-[3rem] border border-slate-200 relative shadow-inner flex flex-col items-center group">
-                      <div className="absolute top-6 left-8 bg-white px-4 py-1 rounded-full border border-slate-200 shadow-sm">
-                        <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Cấu trúc vật lý</span>
-                      </div>
-                      
-                      <div className="mt-8 relative w-56 h-80 bg-white rounded-[2rem] p-8 shadow-2xl border border-slate-100 flex flex-col group-hover:scale-[1.02] transition-transform duration-500">
-                        <div className="w-full h-full flex flex-col border-4 border-slate-900 rounded-2xl overflow-hidden shadow-xl">
-                          <div className={`relative flex-[1.2] flex items-center justify-center font-black text-2xl text-white transition-all duration-700 ${colors.main}`}>
-                             <span>{bjtType === 'NPN' ? 'N' : 'P'}</span>
-                             <div className="absolute right-3 top-3 text-[10px] font-bold opacity-30 uppercase tracking-tighter">Collector</div>
-                          </div>
-                          <div className="h-2 bg-slate-100 opacity-50"></div>
-                          <div className={`relative h-12 flex items-center justify-center font-black text-white text-xl border-y-4 border-slate-900 transition-all duration-700 ${colors.sub}`}>
-                             <span>{bjtType === 'NPN' ? 'P' : 'N'}</span>
-                             <div className="absolute left-3 text-[10px] font-bold opacity-40 uppercase tracking-tighter">Base</div>
-                          </div>
-                          <div className="h-1 bg-slate-100 opacity-50"></div>
-                          <div className={`relative flex-1 flex items-center justify-center font-black text-2xl text-white transition-all duration-700 ${colors.main}`}>
-                             <span>{bjtType === 'NPN' ? 'N' : 'P'}</span>
-                             <div className="absolute right-3 bottom-3 text-[10px] font-bold opacity-30 uppercase tracking-tighter">Emitter</div>
-                          </div>
-                        </div>
-                        
-                        {/* Terminal Pins */}
-                        <div className="absolute -right-8 top-12 w-8 h-1 bg-slate-900 shadow-sm"></div>
-                        <div className="absolute -left-8 top-[148px] w-8 h-1 bg-slate-900 shadow-sm"></div>
-                        <div className="absolute -right-8 bottom-12 w-8 h-1 bg-slate-900 shadow-sm"></div>
-                      </div>
-
-                      <div className="mt-10 flex gap-4 bg-white/50 p-2 rounded-2xl border border-slate-100 backdrop-blur-sm">
-                        {['NPN', 'PNP'].map(type => (
-                          <button 
-                            key={type}
-                            onClick={() => setBjtType(type)}
-                            className={`px-8 py-2.5 rounded-xl text-xs font-black uppercase transition-all ${bjtType === type ? 'bg-blue-900 text-white shadow-lg' : 'text-slate-400 hover:bg-white hover:text-slate-600'}`}
-                          >
-                            {type}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Circuit Symbol Section (Ký hiệu vẽ lại chuẩn xác) */}
-                  <div className="space-y-8 flex flex-col justify-center">
-                    <div className="bg-white p-10 rounded-[3rem] border-2 border-slate-100 shadow-xl flex flex-col items-center relative overflow-hidden group">
-                      <div className="absolute top-6 right-8 bg-slate-50 px-4 py-1 rounded-full border border-slate-100 shadow-sm z-10">
-                        <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Ký hiệu sơ đồ chuẩn</span>
-                      </div>
-
-                      <svg width="240" height="240" viewBox="0 0 100 100" className="relative z-10 filter drop-shadow-xl">
-                        {/* Circle */}
-                        <circle cx="50" cy="50" r="45" fill="none" stroke="#002d72" strokeWidth="2" />
-                        
-                        {/* Base Bar (Heavy line) */}
-                        <line x1="40" y1="32" x2="40" y2="68" stroke="#0f172a" strokeWidth="6" strokeLinecap="square" />
-                        
-                        {/* Terminals */}
-                        <line x1="12" y1="50" x2="40" y2="50" stroke="#0f172a" strokeWidth="3" /> {/* Base lead */}
-                        <line x1="40" y1="42" x2="75" y2="22" stroke="#0f172a" strokeWidth="3" /> {/* Collector lead */}
-                        <line x1="40" y1="58" x2="75" y2="78" stroke="#0f172a" strokeWidth="3" /> {/* Emitter lead */}
-                        
-                        {/* Arrow logic - Redrawn to be sharp and standard */}
-                        {bjtType === 'NPN' ? (
-                          /* NPN Arrow: On Emitter lead, pointing out */
-                          <path 
-                            d="M 68 74 L 78 80 L 61 82 Z" 
-                            fill="#1e40af" 
-                            stroke="#1e40af" 
-                            strokeWidth="1" 
-                            strokeLinejoin="round" 
-                          />
-                        ) : (
-                          /* PNP Arrow: On Emitter lead, pointing in towards base bar */
-                          <path 
-                            d="M 44 44 L 56 32 L 49 53 Z" 
-                            fill="#b91c1c" 
-                            stroke="#b91c1c" 
-                            strokeWidth="1" 
-                            strokeLinejoin="round" 
-                          />
-                        )}
-                        
-                        {/* Terminal Labels */}
-                        <text x="6" y="46" fontSize="8" fontWeight="900" fill="#64748b" className="italic">B</text>
-                        <text x="80" y="24" fontSize="8" fontWeight="900" fill="#64748b" className="italic">C</text>
-                        <text x="80" y="85" fontSize="8" fontWeight="900" fill="#64748b" className="italic">E</text>
-                      </svg>
-                      
-                      <div className="mt-8 text-center space-y-2">
-                        <p className="text-xs font-black text-slate-900 uppercase tracking-widest">Quy tắc nhận diện</p>
-                        <div className="flex items-center justify-center gap-4">
-                           <div className="flex items-center gap-2">
-                              <div className="w-3 h-3 bg-blue-600 rounded-sm"></div>
-                              <span className="text-[10px] font-bold text-slate-500 uppercase">NPN: Ra</span>
-                           </div>
-                           <div className="flex items-center gap-2">
-                              <div className="w-3 h-3 bg-red-600 rounded-sm"></div>
-                              <span className="text-[10px] font-bold text-slate-500 uppercase">PNP: Vào</span>
-                           </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Key Attributes List */}
-                    <div className="grid grid-cols-1 gap-3">
-                      {[
-                        { label: "Emitter (E)", text: "Nồng độ hạt dẫn cực cao. 'Phát' hạt dẫn vào vùng Base.", color: "bg-blue-500" },
-                        { label: "Base (B)", text: "Cực kỳ mỏng, tạp chất thấp. 'Điều khiển' dòng hạt dẫn qua.", color: "bg-red-500" },
-                        { label: "Collector (C)", text: "Diện tích lớn để 'Thu' và tản nhiệt hạt dẫn từ E chuyển tới.", color: "bg-slate-700" }
-                      ].map((item, i) => (
-                        <div key={i} className="flex gap-4 p-5 rounded-[1.5rem] bg-white border border-slate-100 shadow-sm hover:shadow-md transition-shadow">
-                          <div className={`w-3 h-3 rounded-full mt-1.5 ${item.color}`}></div>
-                          <div>
-                            <span className="text-xs font-black text-slate-900 uppercase tracking-tighter">{item.label}</span>
-                            <p className="text-xs text-slate-500 font-medium mt-1 leading-tight">{item.text}</p>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* TAB: OPERATION */}
-            {activeTab === 'operation' && (
-              <div className="p-8 md:p-12 animate-fadeIn space-y-10">
-                <div className="flex items-center gap-4">
-                  <div className="w-14 h-14 bg-green-600 rounded-[1.2rem] flex items-center justify-center text-white shadow-xl shadow-green-100 rotate-6">
-                    <Activity size={32} />
-                  </div>
-                  <div>
-                    <h2 className="text-3xl font-black text-slate-900 uppercase tracking-tight">3. Nguyên lý hoạt động</h2>
-                    <p className="text-slate-400 font-bold text-xs uppercase tracking-widest">Sự dịch chuyển của các hạt mang điện</p>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
-                  {/* Control Panel */}
-                  <div className="lg:col-span-4 space-y-6">
-                    <div className="bg-slate-50 p-8 rounded-[2.5rem] border border-slate-200 shadow-inner">
-                      <div className="flex justify-between items-center mb-6">
-                         <h4 className="text-xs font-black text-slate-400 uppercase tracking-widest">Điều khiển áp Vbe</h4>
-                         <div className="px-3 py-1 bg-white border border-slate-200 rounded-lg shadow-sm text-blue-900 font-black text-lg font-mono">
-                           {vbe.toFixed(2)}V
-                         </div>
-                      </div>
-                      <input 
-                        type="range" 
-                        min="0" 
-                        max="1.0" 
-                        step="0.01" 
-                        value={vbe} 
-                        onChange={(e)=>setVbe(parseFloat(e.target.value))}
-                        className="w-full h-3 bg-slate-200 rounded-full appearance-none cursor-pointer accent-blue-600 mb-8"
-                      />
-                      <div className="space-y-4">
-                         <div className={`p-4 rounded-2xl border-2 transition-all ${vbe < 0.6 ? 'bg-blue-100 border-blue-400' : 'opacity-30 grayscale'}`}>
-                            <p className="text-[10px] font-black uppercase text-blue-800">Chế độ Ngắt</p>
-                            <p className="text-[11px] font-medium mt-1">{'Tiếp giáp B-E chưa mở ($V_{BE} < 0.6V$)'}</p>
-                         </div>
-                         <div className={`p-4 rounded-2xl border-2 transition-all ${vbe >= 0.6 && vbe < 0.85 ? 'bg-green-100 border-green-400' : 'opacity-30 grayscale'}`}>
-                            <p className="text-[10px] font-black uppercase text-green-800">Chế độ Tuyến tính</p>
-                            <p className="text-[11px] font-medium mt-1">{'Dòng khuếch đại ổn định ($V_{BE} \approx 0.7V$)'}</p>
-                         </div>
-                         <div className={`p-4 rounded-2xl border-2 transition-all ${vbe >= 0.85 ? 'bg-red-100 border-red-400' : 'opacity-30 grayscale'}`}>
-                            <p className="text-[10px] font-black uppercase text-red-800">Chế độ Bão hòa</p>
-                            <p className="text-[11px] font-medium mt-1">{'Dòng đạt giới hạn tối đa'}</p>
-                         </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Interactive Simulation View */}
-                  <div className="lg:col-span-8 bg-slate-900 rounded-[3rem] p-10 flex flex-col items-center justify-center relative overflow-hidden shadow-2xl">
-                    <div className="absolute top-8 left-10 flex items-center gap-2">
-                       <div className={`w-2 h-2 rounded-full animate-pulse ${vbe >= 0.6 ? 'bg-green-400' : 'bg-red-500'}`}></div>
-                       <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Real-time Simulation</span>
-                    </div>
-
-                    <div className="relative w-52 h-72 border-2 border-white/20 rounded-[2rem] overflow-hidden bg-black/40 backdrop-blur-xl shadow-[0_0_50px_rgba(0,0,0,0.5)]">
-                        <div className="absolute bottom-0 w-full h-[35%] bg-blue-900/20 border-t border-white/10 flex items-center justify-center"><span className="text-[8px] font-black text-white/20 uppercase tracking-widest">Emitter</span></div>
-                        <div className="absolute top-[35%] w-full h-12 bg-red-600/30 border-y border-white/20 flex items-center justify-center"><span className="text-[8px] font-black text-red-400/40 uppercase tracking-widest">Base (Barrier)</span></div>
-                        <div className="absolute top-0 w-full h-[35%] bg-blue-900/20 border-b border-white/10 flex items-center justify-center"><span className="text-[8px] font-black text-white/20 uppercase tracking-widest">Collector</span></div>
-
-                        {/* Particle simulation */}
-                        <ElectronFlow 
-                          density={vbe < 0.6 ? 0 : vbe < 0.85 ? 2 : 4.5} 
-                          speed={vbe < 0.6 ? 0 : vbe < 0.85 ? 1.2 : 2.8} 
-                        />
-                    </div>
-
-                    <div className="mt-10 flex gap-16">
-                       <div className="text-center group">
-                          <p className="text-[10px] text-slate-500 font-black mb-3 uppercase tracking-[0.2em] italic">{'Dòng $I_B$'}</p>
-                          <div className={`w-4 h-16 mx-auto rounded-full transition-all duration-700 bg-red-500 shadow-[0_0_15px_#ef4444]`} style={{ height: `${vbe * 64}px`, opacity: vbe < 0.1 ? 0.1 : 1 }}></div>
-                       </div>
-                       <div className="text-center group">
-                          <p className="text-[10px] text-slate-500 font-black mb-3 uppercase tracking-[0.2em] italic">{'Dòng $I_C$'}</p>
-                          <div className={`w-4 h-16 mx-auto rounded-full transition-all duration-700 bg-yellow-400 shadow-[0_0_25px_#facc15]`} style={{ height: `${vbe < 0.6 ? 0 : vbe < 0.85 ? vbe * 128 : 128}px`, opacity: vbe < 0.6 ? 0.1 : 1 }}></div>
-                       </div>
-                    </div>
-
-                    <div className="absolute bottom-6 right-10 text-right">
-                       <p className="text-[9px] font-black text-white/20 uppercase tracking-[0.3em]">Physics Engine v2.5</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* TAB: APPLICATIONS */}
-            {activeTab === 'application' && (
-              <div className="p-8 md:p-12 animate-fadeIn space-y-12">
-                <div className="flex items-center gap-4">
-                  <div className="w-14 h-14 bg-yellow-500 rounded-[1.2rem] flex items-center justify-center text-white shadow-xl shadow-yellow-100 -rotate-6">
-                    <Lightbulb size={32} />
-                  </div>
-                  <div>
-                    <h2 className="text-3xl font-black text-slate-900 uppercase tracking-tight">4. Ứng dụng & Demo</h2>
-                    <p className="text-slate-400 font-bold text-xs uppercase tracking-widest">Từ lý thuyết đến thực tiễn kỹ thuật</p>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-                  {/* Switch Demo */}
-                  <div className="bg-slate-50 p-8 rounded-[2.5rem] border border-slate-200 shadow-sm hover:shadow-xl transition-all flex flex-col group">
-                    <h4 className="text-xl font-black text-slate-900 mb-2 uppercase tracking-tighter">Công tắc Điện tử</h4>
-                    <p className="text-xs text-slate-400 mb-8 italic">{'Dùng dòng cực Base nhỏ điều khiển LED công suất lớn'}</p>
-                    <div className="bg-slate-900 rounded-[2rem] p-10 flex flex-col items-center flex-grow shadow-2xl relative">
-                       <div className="absolute top-4 left-6 text-[8px] font-black text-white/20 uppercase tracking-widest">Circuit Simulation</div>
-                       <div className={`w-20 h-20 rounded-full transition-all duration-300 flex items-center justify-center mb-10 border-4 ${isLedOn ? 'bg-yellow-400 shadow-[0_0_60px_#facc15] border-yellow-200 scale-110' : 'bg-slate-800 border-slate-700'}`}>
-                          <Zap size={40} className={isLedOn ? 'text-white animate-pulse' : 'text-slate-600'} />
-                       </div>
-                       <button 
-                         onClick={()=>setIsLedOn(!isLedOn)}
-                         className={`px-12 py-4 rounded-2xl font-black text-xs uppercase tracking-widest transition-all shadow-xl hover:-translate-y-1 active:scale-95 ${isLedOn ? 'bg-red-500 text-white shadow-red-200' : 'bg-blue-600 text-white shadow-blue-200'}`}
-                       >
-                         {isLedOn ? 'Ngắt Base (Turn Off)' : 'Cấp Base (Turn On)'}
-                       </button>
-                    </div>
-                  </div>
-
-                  {/* Amplifier Demo */}
-                  <div className="bg-slate-50 p-8 rounded-[2.5rem] border border-slate-200 shadow-sm hover:shadow-xl transition-all flex flex-col group">
-                    <h4 className="text-xl font-black text-slate-900 mb-2 uppercase tracking-tighter">Mạch Khuếch đại</h4>
-                    <p className="text-xs text-slate-400 mb-8 italic">{'Phóng đại biên độ tín hiệu âm tần'}</p>
-                    <div className="bg-slate-900 rounded-[2rem] p-8 flex flex-col flex-grow shadow-2xl relative">
-                       <div className="absolute top-4 left-6 text-[8px] font-black text-white/20 uppercase tracking-widest">Signal Oscilloscope</div>
-                       <div className="h-40 bg-black/40 rounded-2xl border border-white/5 relative overflow-hidden flex items-center mb-8">
-                          <div className="absolute inset-0 flex items-center justify-around px-6">
-                             {[...Array(24)].map((_, i) => (
-                               <div 
-                                 key={i} 
-                                 className="w-1.5 bg-blue-500 rounded-full animate-bounce shadow-[0_0_12px_#3b82f6]"
-                                 style={{ height: `${20 + (Math.sin(i * 0.4) * 20 * inputSignal)}px`, animationDelay: `${i * 0.08}s` }}
-                                ></div>
-                             ))}
-                          </div>
-                          <div className="absolute bottom-3 right-4 text-[8px] font-black text-blue-400/50 uppercase tracking-widest">Active Region</div>
-                       </div>
-                       <div className="space-y-4 px-2">
-                          <div className="flex justify-between items-center text-white/50 text-[9px] font-black uppercase tracking-widest">
-                            <span>Input Amplitude</span>
-                            <span className="text-indigo-400">{'Gain ($h_{FE}$): x100'}</span>
-                          </div>
-                          <input 
-                            type="range" 
-                            min="0.3" 
-                            max="2.5" 
-                            step="0.1" 
-                            value={inputSignal} 
-                            onChange={(e)=>setInputSignal(parseFloat(e.target.value))}
-                            className="w-full h-2 bg-slate-800 rounded-full appearance-none cursor-pointer accent-indigo-500"
-                          />
-                       </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Teacher's Note Section */}
-                <div className="bg-[#002d72] p-10 rounded-[3.5rem] text-white flex flex-col md:flex-row items-center gap-12 shadow-2xl relative group overflow-hidden">
-                   <div className="absolute top-0 left-0 w-full h-full opacity-5 pointer-events-none group-hover:scale-110 transition-transform duration-1000">
-                      <svg width="100%" height="100%"><pattern id="grid-note" width="60" height="60" patternUnits="userSpaceOnUse"><path d="M 60 0 L 0 0 0 60" fill="none" stroke="white" strokeWidth="1"/></pattern><rect width="100%" height="100%" fill="url(#grid-note)" /></svg>
-                   </div>
-                   <div className="p-10 bg-white/10 backdrop-blur-2xl rounded-[3rem] border border-white/20 shadow-inner group-hover:rotate-6 transition-transform duration-500">
-                      <Layers size={56} className="text-blue-200" />
-                   </div>
-                   <div className="flex-1">
-                      <h4 className="text-2xl font-black mb-4 uppercase italic tracking-tighter decoration-blue-400 underline underline-offset-8">Lời khuyên của Giảng viên</h4>
-                      <p className="text-blue-100/90 leading-relaxed font-medium text-lg italic">
-                        {' "Các em hãy lưu ý: Trong chế độ khuếch đại, sự mỏng của lớp Base là yếu tố quyết định. Nếu lớp Base quá dày, các hạt dẫn từ cực Phát sẽ bị tái hợp hết trước khi kịp bay sang cực Thu. Hãy luôn kiểm tra thông số kỹ thuật (Datasheet) để biết chính xác điểm làm việc tối ưu của linh kiện." '}
-                      </p>
-                      <div className="mt-8 flex items-center gap-4">
-                         <div className="w-12 h-1 bg-blue-400 rounded-full"></div>
-                         <p className="font-black text-white text-lg tracking-[0.2em] uppercase">Ths. Đinh Văn Nam</p>
-                      </div>
-                   </div>
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-      </main>
-
-      {/* Footer Chuyên nghiệp */}
-      <footer className="bg-white border-t py-16 px-4 mt-12 shadow-inner">
-        <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-12">
-          <div className="flex items-center gap-8">
-            <div className="w-24 h-24 bg-[#002d72] rounded-[2.5rem] flex items-center justify-center text-white shadow-2xl transition-all hover:-rotate-12 cursor-pointer group">
-              <GraduationCap size={48} className="group-hover:scale-110 transition-transform" />
-            </div>
-            <div>
-              <p className="text-[11px] text-blue-600 font-black uppercase tracking-[0.5em] mb-2">Phenikaa University | Engineering</p>
-              <h3 className="text-3xl font-black text-slate-900 tracking-tighter">Khoa Điện - Điện tử</h3>
-              <p className="text-base font-bold text-slate-500 uppercase tracking-widest mt-1">Trường kỹ thuật Phenikaa</p>
-            </div>
-          </div>
-          
-          <div className="flex flex-col md:items-end text-center md:text-right space-y-3">
-            <div className="flex items-center gap-3 text-blue-900 font-black mb-1 justify-center md:justify-end">
-              <div className="p-1.5 bg-blue-50 rounded-lg">
-                <Copyright size={20} />
-              </div>
-              <span className="uppercase tracking-[0.1em] text-sm">Bản quyền học thuật 2026</span>
-            </div>
-            <p className="text-sm text-slate-900 font-black uppercase tracking-tight">Trường kỹ thuật Phenikaa, Đại học Phenikaa</p>
-            <div className="text-[11px] text-slate-400 font-bold space-y-1">
-              <p className="italic">Người thực hiện: Ths. Đinh Văn Nam</p>
-              <p className="hover:text-blue-600 transition-colors cursor-pointer">Email: nam.dinhvan@phenikaa-uni.edu.vn</p>
-            </div>
-          </div>
-        </div>
-      </footer>
-
-      {/* CSS Animations & Global styles */}
-      <style dangerouslySetInnerHTML={{ __html: `
         @keyframes fadeIn {
-          from { opacity: 0; transform: translateY(30px); }
-          to { opacity: 1; transform: translateY(0); }
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         @keyframes flowUp {
-          from { transform: translateY(0); opacity: 0; }
-          20% { opacity: 1; }
-          80% { opacity: 1; }
-          to { transform: translateY(-250px); opacity: 0; }
+            from { transform: translateY(0); opacity: 0; }
+            20% { opacity: 1; }
+            80% { opacity: 1; }
+            to { transform: translateY(-260px); opacity: 0; }
         }
         .animate-fadeIn {
-          animation: fadeIn 0.8s cubic-bezier(0.19, 1, 0.22, 1) forwards;
+            animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         
         input[type=range]::-webkit-slider-thumb {
-          -webkit-appearance: none;
-          height: 28px;
-          width: 28px;
-          border-radius: 50%;
-          background: #002d72;
-          cursor: pointer;
-          border: 4px solid white;
-          box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-          transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            -webkit-appearance: none;
+            height: 24px;
+            width: 24px;
+            border-radius: 50%;
+            background: #002d72;
+            cursor: pointer;
+            border: 3px solid white;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
-        input[type=range]::-webkit-slider-thumb:hover {
-          transform: scale(1.15);
-          background: #2563eb;
-        }
-      `}} />
-    </div>
-  );
-};
+    </style>
+</head>
+<body class="bg-slate-50">
+    <div id="root"></div>
 
-export default App;
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+
+        // Thành phần hiển thị Icon an toàn
+        const Icon = ({ name, size = 24, className = "" }) => {
+            useEffect(() => {
+                if (window.lucide) {
+                    window.lucide.createIcons();
+                }
+            }, [name]);
+            return <i data-lucide={name} style={{ width: size, height: size }} className={className}></i>;
+        };
+
+        // Mô phỏng dòng điện hạt dẫn
+        const ElectronFlow = ({ density, speed }) => {
+            if (density <= 0) return null;
+            const particleCount = Math.floor(density * 15);
+            return (
+                <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                    {[...Array(particleCount)].map((_, i) => (
+                        <div
+                            key={i}
+                            className="absolute bg-yellow-300 rounded-full blur-[1px] shadow-[0_0_8px_#fef08a]"
+                            style={{
+                                width: '4px',
+                                height: '4px',
+                                left: `${10 + Math.random() * 80}%`,
+                                bottom: '-10px',
+                                animation: `flowUp ${2.5 / speed}s linear infinite`,
+                                animationDelay: `${Math.random() * 2}s`
+                            }}
+                        />
+                    ))}
+                </div>
+            );
+        };
+
+        const App = () => {
+            const [activeTab, setActiveTab] = useState('overview');
+            const [bjtType, setBjtType] = useState('NPN');
+            const [vbe, setVbe] = useState(0.0);
+            const [isLedOn, setIsLedOn] = useState(false);
+            const [inputSignal, setInputSignal] = useState(1);
+
+            const getBjtColors = () => {
+                return bjtType === 'NPN' 
+                    ? { main: 'bg-blue-800', sub: 'bg-red-600', accent: '#1d4ed8' }
+                    : { main: 'bg-red-700', sub: 'bg-blue-600', accent: '#b91c1c' };
+            };
+
+            const colors = getBjtColors();
+
+            return (
+                <div className="min-h-screen flex flex-col">
+                    {/* Header chuẩn nhận diện thương hiệu */}
+                    <header className="bg-white border-b sticky top-0 z-50 shadow-sm">
+                        <div className="max-w-6xl mx-auto px-4 py-4 flex flex-col md:flex-row justify-between items-center gap-4">
+                            <div className="flex items-center gap-4">
+                                <img 
+                                    src="Logo_Trường kỹ thuật.png" 
+                                    alt="Logo Phenikaa" 
+                                    className="h-16 object-contain" 
+                                    onError={(e) => { e.target.src = 'https://via.placeholder.com/200x80?text=Phenikaa+University'; }} 
+                                />
+                                <div className="h-12 w-px bg-slate-200 hidden md:block"></div>
+                                <div className="text-center md:text-left">
+                                    <h1 className="text-lg font-extrabold text-[#002d72] uppercase leading-tight tracking-tight">Trường kỹ thuật Phenikaa</h1>
+                                    <p className="text-sm font-semibold text-blue-600 uppercase tracking-widest">Đại học Phenikaa</p>
+                                </div>
+                            </div>
+                            <div className="text-center md:text-right border-t md:border-t-0 pt-2 md:pt-0">
+                                <span className="text-[10px] text-slate-400 uppercase font-black tracking-widest block">Giảng viên hướng dẫn</span>
+                                <p className="text-base font-extrabold text-slate-900">Ths. Đinh Văn Nam</p>
+                            </div>
+                        </div>
+                    </header>
+
+                    {/* Banner Tiêu đề */}
+                    <div className="bg-[#002d72] text-white py-12 px-4 text-center relative overflow-hidden">
+                        <div className="absolute inset-0 opacity-5">
+                            <svg width="100%" height="100%"><pattern id="p" width="40" height="40" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1" fill="white"/></pattern><rect width="100%" height="100%" fill="url(#p)" /></svg>
+                        </div>
+                        <h2 className="text-3xl md:text-5xl font-black mb-4 uppercase tracking-tighter italic">Tranzito Lưỡng cực (BJT)</h2>
+                        <p className="text-blue-100 max-w-2xl mx-auto font-medium opacity-90 tracking-wide text-sm md:text-base">Mô phỏng tương tác và học liệu điện tử dành cho ngành Điện - Điện tử</p>
+                    </div>
+
+                    {/* Thanh điều hướng */}
+                    <nav className="bg-white border-b shadow-md sticky top-[97px] z-40">
+                        <div className="max-w-6xl mx-auto flex overflow-x-auto no-scrollbar justify-start md:justify-center">
+                            {[
+                                { id: 'overview', label: 'Tổng quan', icon: 'book-open' },
+                                { id: 'structure', label: 'Cấu tạo & Ký hiệu', icon: 'cpu' },
+                                { id: 'operation', label: 'Nguyên lý', icon: 'activity' },
+                                { id: 'application', label: 'Ứng dụng', icon: 'lightbulb' }
+                            ].map((tab) => (
+                                <button 
+                                    key={tab.id} 
+                                    onClick={() => setActiveTab(tab.id)} 
+                                    className={`flex items-center gap-2 px-8 py-5 transition-all whitespace-nowrap relative font-black text-xs uppercase tracking-widest ${activeTab === tab.id ? 'text-blue-800' : 'text-slate-400 hover:text-slate-600 hover:bg-slate-50'}`}
+                                >
+                                    <Icon name={tab.icon} size={18} />
+                                    {tab.label}
+                                    {activeTab === tab.id && <div className="absolute bottom-0 left-0 w-full h-1.5 bg-blue-800" />}
+                                </button>
+                            ))}
+                        </div>
+                    </nav>
+
+                    {/* Nội dung chính */}
+                    <main className="flex-grow max-w-6xl mx-auto w-full p-4 md:p-8">
+                        <div className="bg-white rounded-[2rem] shadow-xl border border-slate-100 overflow-hidden min-h-[600px] flex flex-col p-6 md:p-12 animate-fadeIn">
+                            
+                            {activeTab === 'overview' && (
+                                <div className="space-y-8">
+                                    <div className="flex items-center gap-4">
+                                        <div className="w-14 h-14 bg-blue-600 rounded-2xl flex items-center justify-center text-white shadow-lg rotate-3">
+                                            <Icon name="info" size={32} />
+                                        </div>
+                                        <h2 className="text-3xl font-black text-slate-900 uppercase">1. Giới thiệu chung</h2>
+                                    </div>
+                                    <p className="text-xl text-slate-600 leading-relaxed font-medium">
+                                        Bipolar Junction Transistor (BJT) là một linh kiện bán dẫn có 3 cực, có khả năng điều khiển dòng điện chạy qua hai cực đầu ra bằng một dòng điện nhỏ hơn tại cực đầu vào. 
+                                    </p>
+                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                        <div className="p-8 rounded-3xl bg-blue-50 border border-blue-100 shadow-sm hover:shadow-md transition-all">
+                                            <Icon name="waves" className="text-blue-700 mb-4" />
+                                            <h4 className="text-blue-900 font-extrabold mb-2 text-lg uppercase">Khuếch đại</h4>
+                                            <p className="text-sm text-slate-600">Phóng đại biên độ tín hiệu yếu thành tín hiệu mạnh hơn.</p>
+                                        </div>
+                                        <div className="p-8 rounded-3xl bg-yellow-50 border border-yellow-100 shadow-sm hover:shadow-md transition-all">
+                                            <Icon name="zap" className="text-yellow-700 mb-4" />
+                                            <h4 className="text-yellow-900 font-extrabold mb-2 text-lg uppercase">Đóng ngắt</h4>
+                                            <p className="text-sm text-slate-600">Sử dụng trong mạch số như một khóa điện tử tốc độ cao.</p>
+                                        </div>
+                                        <div className="p-8 rounded-3xl bg-indigo-50 border border-indigo-100 shadow-sm hover:shadow-md transition-all">
+                                            <Icon name="settings" className="text-indigo-700 mb-4" />
+                                            <h4 className="text-indigo-900 font-extrabold mb-2 text-lg uppercase">Điều khiển</h4>
+                                            <p className="text-sm text-slate-600">Điều tiết công suất cho tải dựa trên dòng điều khiển.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
+                            {activeTab === 'structure' && (
+                                <div className="space-y-12">
+                                    <div className="flex items-center gap-4">
+                                        <div className="w-14 h-14 bg-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-lg">
+                                            <Icon name="cpu" size={32} />
+                                        </div>
+                                        <h2 className="text-3xl font-black text-slate-900 uppercase">2. Cấu tạo & Ký hiệu</h2>
+                                    </div>
+                                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                                        {/* Mô hình vật lý */}
+                                        <div className="bg-slate-50 p-8 rounded-[2.5rem] border border-slate-200 flex flex-col items-center">
+                                            <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-6">Mô hình lớp bán dẫn</span>
+                                            <div className="relative w-48 h-72 bg-white rounded-2xl p-4 shadow-xl border border-slate-200 flex flex-col">
+                                                <div className="w-full h-full flex flex-col border-4 border-slate-900 rounded-lg overflow-hidden">
+                                                    <div className={`flex-[1.2] flex items-center justify-center font-black text-2xl text-white transition-colors duration-500 ${colors.main}`}>
+                                                        {bjtType === 'NPN' ? 'N' : 'P'}
+                                                    </div>
+                                                    <div className="h-1 bg-slate-100 opacity-30"></div>
+                                                    <div className={`h-10 flex items-center justify-center font-black text-white text-lg border-y-4 border-slate-900 transition-colors duration-500 ${colors.sub}`}>
+                                                        {bjtType === 'NPN' ? 'P' : 'N'}
+                                                    </div>
+                                                    <div className="h-1 bg-slate-100 opacity-30"></div>
+                                                    <div className={`flex-1 flex items-center justify-center font-black text-2xl text-white transition-colors duration-500 ${colors.main}`}>
+                                                        {bjtType === 'NPN' ? 'N' : 'P'}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="mt-8 flex gap-3 p-1 bg-slate-200 rounded-xl">
+                                                {['NPN', 'PNP'].map(type => (
+                                                    <button key={type} onClick={() => setBjtType(type)} className={`px-8 py-2 rounded-lg text-xs font-black uppercase transition-all ${bjtType === type ? 'bg-blue-900 text-white shadow-md' : 'text-slate-500 hover:text-slate-700'}`}>
+                                                        {type}
+                                                    </button>
+                                                ))}
+                                            </div>
+                                        </div>
+
+                                        {/* Ký hiệu chuẩn xác */}
+                                        <div className="bg-white p-8 rounded-[2.5rem] border-2 border-slate-100 shadow-xl flex flex-col items-center justify-center">
+                                            <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-8">Ký hiệu sơ đồ chuẩn IEC</span>
+                                            <svg width="220" height="220" viewBox="0 0 100 100">
+                                                <circle cx="50" cy="50" r="45" fill="none" stroke="#002d72" strokeWidth="2.5" />
+                                                <line x1="40" y1="33" x2="40" y2="67" stroke="#0f172a" strokeWidth="6" strokeLinecap="square" />
+                                                <line x1="12" y1="50" x2="40" y2="50" stroke="#0f172a" strokeWidth="3" />
+                                                <line x1="40" y1="42" x2="72" y2="22" stroke="#0f172a" strokeWidth="3" />
+                                                <line x1="40" y1="58" x2="72" y2="78" stroke="#0f172a" strokeWidth="3" />
+                                                
+                                                {/* Mũi tên NPN Chuẩn: Hướng RA (Out) trên chân E */}
+                                                {bjtType === 'NPN' ? (
+                                                    <path d="M 64 74 L 75 79.5 L 61 83 Z" fill="#1e40af" stroke="#1e40af" strokeWidth="1" strokeLinejoin="round" />
+                                                ) : (
+                                                    /* Mũi tên PNP Chuẩn: Hướng VÀO (In) trên chân E */
+                                                    <path d="M 43 61 L 53 60 L 50 69 Z" fill="#b91c1c" stroke="#b91c1c" strokeWidth="1" strokeLinejoin="round" />
+                                                )}
+                                                
+                                                <text x="6" y="46" fontSize="8" fontWeight="900" fill="#64748b" fontStyle="italic">B</text>
+                                                <text x="75" y="22" fontSize="8" fontWeight="900" fill="#64748b" fontStyle="italic">C</text>
+                                                <text x="75" y="85" fontSize="8" fontWeight="900" fill="#64748b" fontStyle="italic">E</text>
+                                            </svg>
+                                            <p className="mt-8 text-xs font-bold text-slate-400 italic">
+                                                {bjtType === 'NPN' ? 'Mũi tên hướng ra cực Emitter' : 'Mũi tên hướng vào phía Base'}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
+                            {activeTab === 'operation' && (
+                                <div className="space-y-10">
+                                    <div className="flex items-center gap-4">
+                                        <div className="w-14 h-14 bg-green-600 rounded-2xl flex items-center justify-center text-white shadow-lg rotate-6">
+                                            <Icon name="activity" size={32} />
+                                        </div>
+                                        <h2 className="text-3xl font-black text-slate-900 uppercase">3. Nguyên lý hoạt động</h2>
+                                    </div>
+                                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
+                                        <div className="lg:col-span-4 bg-slate-50 p-8 rounded-3xl border border-slate-200 flex flex-col justify-center">
+                                            <h4 className="text-xs font-black text-slate-400 uppercase tracking-widest mb-6">Điều khiển điện áp Vbe</h4>
+                                            <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-inner mb-8">
+                                                <p className="text-[10px] text-slate-400 font-bold mb-1 uppercase">Giá trị thực tế</p>
+                                                <p className="text-4xl font-black text-blue-900 font-mono tracking-tighter">{vbe.toFixed(2)}V</p>
+                                            </div>
+                                            <input 
+                                                type="range" 
+                                                min="0" 
+                                                max="1.0" 
+                                                step="0.01" 
+                                                value={vbe} 
+                                                onChange={(e)=>setVbe(parseFloat(e.target.value))} 
+                                                className="w-full h-3 bg-slate-200 rounded-full appearance-none cursor-pointer mb-6" 
+                                            />
+                                            <div className={`p-4 rounded-xl border-2 transition-all font-bold text-xs uppercase text-center ${vbe < 0.6 ? 'bg-slate-200 border-slate-300 text-slate-500' : vbe < 0.85 ? 'bg-green-100 border-green-500 text-green-700 shadow-md' : 'bg-red-100 border-red-500 text-red-700 shadow-md'}`}>
+                                                {vbe < 0.6 ? 'Trạng thái khóa' : vbe < 0.85 ? 'Khuếch đại' : 'Bão hòa'}
+                                            </div>
+                                        </div>
+                                        <div className="lg:col-span-8 bg-slate-900 rounded-[3rem] p-10 flex flex-col items-center justify-center relative min-h-[450px] shadow-2xl">
+                                            <div className="absolute top-6 left-8 flex items-center gap-2">
+                                                <div className={`w-2 h-2 rounded-full ${vbe >= 0.6 ? 'bg-green-500 animate-pulse' : 'bg-red-500'}`}></div>
+                                                <span className="text-[10px] text-slate-500 font-black uppercase tracking-widest">Physics Simulation</span>
+                                            </div>
+                                            <div className="relative w-56 h-80 border-2 border-white/20 rounded-[2.5rem] overflow-hidden bg-black/50 shadow-inner backdrop-blur-sm">
+                                                <div className="absolute bottom-0 w-full h-[35%] bg-blue-900/10 border-t border-white/5 flex items-center justify-center text-white/10 text-[8px] font-black uppercase tracking-widest">Emitter</div>
+                                                <div className="absolute top-[35%] w-full h-12 bg-red-600/20 border-y border-white/10 flex items-center justify-center text-red-400/40 text-[8px] font-black uppercase">Base</div>
+                                                <div className="absolute top-0 w-full h-[35%] bg-blue-900/10 border-b border-white/5 flex items-center justify-center text-white/10 text-[8px] font-black uppercase tracking-widest">Collector</div>
+                                                
+                                                <ElectronFlow density={vbe < 0.6 ? 0 : vbe < 0.85 ? 2.5 : 5} speed={vbe < 0.6 ? 0 : vbe < 0.85 ? 1.5 : 3.5} />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
+                            {activeTab === 'application' && (
+                                <div className="space-y-12">
+                                    <div className="flex items-center gap-4">
+                                        <div className="w-14 h-14 bg-yellow-500 rounded-2xl flex items-center justify-center text-white shadow-lg -rotate-6">
+                                            <Icon name="lightbulb" size={32} />
+                                        </div>
+                                        <h2 className="text-3xl font-black text-slate-900 uppercase">4. Ứng dụng & Demo</h2>
+                                    </div>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                        {/* Demo Công tắc */}
+                                        <div className="bg-slate-50 p-8 rounded-[2.5rem] border border-slate-200 flex flex-col">
+                                            <h4 className="text-xl font-black text-slate-900 mb-2 uppercase">Công tắc điện tử</h4>
+                                            <div className="bg-slate-900 rounded-[2rem] p-10 flex flex-col items-center flex-grow mt-4 shadow-xl">
+                                                <div className={`w-24 h-24 rounded-full transition-all duration-300 flex items-center justify-center mb-10 border-4 ${isLedOn ? 'bg-yellow-400 shadow-[0_0_80px_#facc15] border-yellow-200 scale-110' : 'bg-slate-800 border-slate-700'}`}>
+                                                    <Icon name="zap" size={48} className={isLedOn ? 'text-white animate-pulse' : 'text-slate-600'} />
+                                                </div>
+                                                <button 
+                                                    onClick={() => setIsLedOn(!isLedOn)} 
+                                                    className={`px-12 py-4 rounded-2xl font-black text-sm uppercase tracking-widest transition-all shadow-lg hover:-translate-y-1 active:translate-y-0.5 ${isLedOn ? 'bg-red-500 text-white shadow-red-200' : 'bg-blue-600 text-white shadow-blue-200'}`}
+                                                >
+                                                    {isLedOn ? 'Tắt dòng Base' : 'Kích dòng Base'}
+                                                </button>
+                                            </div>
+                                        </div>
+                                        {/* Demo Khuếch đại */}
+                                        <div className="bg-slate-50 p-8 rounded-[2.5rem] border border-slate-200 flex flex-col">
+                                            <h4 className="text-xl font-black text-slate-900 mb-2 uppercase">Khuếch đại tín hiệu</h4>
+                                            <div className="bg-slate-900 rounded-[2rem] p-8 flex flex-col flex-grow mt-4 shadow-xl">
+                                                <div className="h-44 bg-black/60 rounded-2xl border border-white/5 relative overflow-hidden flex items-center mb-10 px-6 shadow-inner">
+                                                    {[...Array(22)].map((_, i) => (
+                                                        <div 
+                                                            key={i} 
+                                                            className="w-2 bg-blue-500 rounded-full animate-bounce shadow-[0_0_15px_#3b82f6] mx-auto" 
+                                                            style={{ 
+                                                                height: `${25 + (Math.sin(i * 0.5) * 25 * inputSignal)}px`, 
+                                                                animationDelay: `${i * 0.1}s`,
+                                                                opacity: 0.4 + (inputSignal / 4)
+                                                            }}
+                                                        ></div>
+                                                    ))}
+                                                    <span className="absolute bottom-3 right-4 text-[8px] font-black text-blue-400/40 uppercase tracking-widest italic">Gain Scope Output</span>
+                                                </div>
+                                                <div className="space-y-4">
+                                                    <div className="flex justify-between text-[10px] text-white/50 font-bold uppercase tracking-widest">
+                                                        <span>Âm lượng vào</span>
+                                                        <span className="text-indigo-400 font-black">Hệ số Gain (hFE)</span>
+                                                    </div>
+                                                    <input 
+                                                        type="range" 
+                                                        min="0.3" 
+                                                        max="2.5" 
+                                                        step="0.1" 
+                                                        value={inputSignal} 
+                                                        onChange={(e)=>setInputSignal(parseFloat(e.target.value))} 
+                                                        className="w-full h-2 bg-slate-800 rounded-full appearance-none cursor-pointer accent-indigo-500" 
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    </main>
+
+                    {/* Footer chuẩn nhận diện */}
+                    <footer className="bg-white border-t py-16 px-4 shadow-inner mt-12">
+                        <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-12 text-center md:text-right">
+                            <div className="flex items-center gap-8">
+                                <div className="w-24 h-24 bg-[#002d72] rounded-[2.5rem] flex items-center justify-center text-white shadow-2xl transition-transform hover:-rotate-12">
+                                    <Icon name="graduation-cap" size={48} />
+                                </div>
+                                <div className="text-left">
+                                    <p className="text-[10px] text-blue-600 font-black uppercase tracking-[0.5em] mb-2">Học liệu Phenikaa</p>
+                                    <h3 className="text-3xl font-black text-slate-900 tracking-tighter">Khoa Điện - Điện tử</h3>
+                                    <p className="text-base font-bold text-slate-500 uppercase tracking-widest mt-1">Trường kỹ thuật Phenikaa</p>
+                                </div>
+                            </div>
+                            <div className="space-y-4">
+                                <div className="flex items-center justify-center md:justify-end gap-2 text-blue-900 font-black">
+                                    <Icon name="copyright" size={18} />
+                                    <span className="uppercase tracking-widest text-sm font-black">Bản quyền 2026</span>
+                                </div>
+                                <p className="text-sm text-slate-900 font-black uppercase tracking-tight">Trường kỹ thuật Phenikaa, Đại học Phenikaa</p>
+                                <p className="text-[11px] text-slate-400 font-bold italic">Tác giả biên soạn: Ths. Đinh Văn Nam</p>
+                                <p className="text-[10px] text-slate-300 font-bold tracking-tighter">Liên hệ: nam.dinhvan@phenikaa-uni.edu.vn</p>
+                            </div>
+                        </div>
+                    </footer>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
